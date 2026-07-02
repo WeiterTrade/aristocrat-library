@@ -327,7 +327,7 @@
 <body>
 
 <div class="container">
-    <a href="index.html" class="back-button" onclick="goBack(); return false;">← Вернуться в библиотеку</a>
+    <a href="index.html" class="back-button">← Вернуться в библиотеку</a>
     <div id="authorContainer"></div>
     <h2 class="books-section-title" id="booksTitle" style="display: none;">📚 Книги автора</h2>
     <div class="books-grid" id="booksGrid"></div>
@@ -335,25 +335,21 @@
 
 <script src="books-data.js"></script>
 <script>
-// Исправленная функция для работы с URL
+// Получаем имя автора из URL с правильным декодированием
 function getAuthorFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     let authorName = urlParams.get('name');
     
     if (!authorName) return null;
     
-    // Декодируем URL и исправляем возможные проблемы с кодировкой
+    // Декодируем URL
     try {
         authorName = decodeURIComponent(authorName);
     } catch (e) {
-        console.error('Error decoding URL:', e);
+        console.error('Ошибка декодирования URL:', e);
     }
     
     return authorName.trim();
-}
-
-function goBack() {
-    window.location.href = 'index.html';
 }
 
 const authorName = getAuthorFromURL();
@@ -399,7 +395,6 @@ if (author) {
             const card = document.createElement('div');
             card.className = 'book-card';
             
-            // Формируем кнопки скачивания
             let formatsHTML = '';
             if (book.formats.epub && book.formats.epub !== '#') {
                 formatsHTML += `<a href="${book.formats.epub}" class="format-btn epub">EPUB</a>`;
@@ -432,14 +427,13 @@ if (author) {
     
     document.title = `${author.name} - Библиотека`;
 } else {
-    // Показываем улучшенное сообщение об ошибке
     container.innerHTML = `
         <div class="error-message">
             <h2>😕 Автор не найден</h2>
             <p style="font-size: 0.7em; margin: 20px 0; color: #a0c4ff;">
                 ${authorName ? `Запрошенный автор: "${authorName}"` : 'Автор не указан в URL'}
             </p>
-            <a href="index.html" class="error-button" onclick="goBack(); return false;">Вернуться в библиотеку</a>
+            <a href="index.html" class="error-button">Вернуться в библиотеку</a>
         </div>
     `;
     document.title = 'Автор не найден - Библиотека';
