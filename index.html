@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Библиотека - Aristocrat</title>
+    <title>Библиотека книг - Aristocrat</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -85,6 +85,44 @@
         .navbar-menu a.active {
             background: rgba(255,255,255,0.15);
             border-bottom-color: #ffd700;
+        }
+
+        /* Выпадающее меню */
+        .navbar-menu .dropdown {
+            position: relative;
+        }
+
+        .navbar-menu .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: linear-gradient(135deg, #0066b3 0%, #0055a0 100%);
+            min-width: 200px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-radius: 0 0 8px 8px;
+            z-index: 1001;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar-menu .dropdown-menu li {
+            margin: 0;
+        }
+
+        .navbar-menu .dropdown-menu a {
+            padding: 12px 20px;
+            display: block;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .navbar-menu .dropdown-menu a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .navbar-menu .dropdown:hover .dropdown-menu {
+            display: block;
         }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -557,6 +595,7 @@
             font-size: 18px; color: #ffd700;
         }
 
+        /* Адаптация */
         @media (max-width: 768px) {
             .navbar-container {
                 flex-direction: column;
@@ -582,6 +621,12 @@
             .navbar-menu a {
                 padding: 12px 10px;
                 font-size: 13px;
+            }
+            
+            .navbar-menu .dropdown-menu {
+                position: static;
+                width: 100%;
+                box-shadow: none;
             }
             
             .container { padding: 10px; }
@@ -763,8 +808,8 @@
 <nav class="top-navbar">
     <div class="navbar-container">
         <a href="https://sites.google.com/view/aristocrat-inc" class="navbar-logo">
-            <img src="https://via.placeholder.com/40x40/ffd700/000?text=A" alt="Aristocrat">
-            Aristocrat Inc
+            <img src="https://via.placeholder.com/40x40/000/ffd700?text=A" alt="Файловая Кладовка">
+            Файловая Кладовка
         </a>
         <ul class="navbar-menu">
             <li><a href="https://sites.google.com/view/aristocrat-inc">🏠 Главная</a></li>
@@ -772,7 +817,15 @@
             <li><a href="https://sites.google.com/view/aristocrat-inc/образы-windows">🟡 Образы Windows</a></li>
             <li><a href="https://sites.google.com/view/aristocrat-inc/microsoft-office">🟡 Microsoft Office</a></li>
             <li><a href="https://sites.google.com/view/aristocrat-inc/компоненты-драйвера">📦 Компоненты/Драйвера</a></li>
-            <li><a href="https://sites.google.com/view/aristocrat-inc/дополнительно"> Дополнительно</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">📂 Дополнительно ▼</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://sites.google.com/view/aristocrat-inc/статьи">📝 Статьи</a></li>
+                    <li><a href="https://sites.google.com/view/aristocrat-inc/музыка">🎵 Музыка</a></li>
+                    <li><a href="https://weitertrade.github.io/aristocrat-library/">📚 Библиотека</a></li>
+                </ul>
+            </li>
+            <li><a href="https://sites.google.com/view/aristocrat-inc/поиск">🔍</a></li>
         </ul>
     </div>
 </nav>
