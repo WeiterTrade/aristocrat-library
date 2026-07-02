@@ -295,22 +295,6 @@
             color: #ffd700;
         }
 
-        .book-series {
-            font-size: 12px;
-            color: #a0c4ff;
-            margin: 0 0 8px 0;
-            font-style: italic;
-        }
-
-        .book-series a {
-            color: #a0c4ff;
-            text-decoration: none;
-        }
-
-        .book-series a:hover {
-            color: #ffd700;
-        }
-
         .download-label {
             font-size: 12px;
             font-weight: bold;
@@ -356,68 +340,23 @@
         }
 
         @media (max-width: 768px) {
-            .series-header {
-                padding: 20px;
-            }
-            
-            .series-cover-collage {
-                height: 320px;
-                max-width: 400px;
-            }
-            
-            .collage-book {
-                width: 150px;
-                height: 225px;
-            }
-            
-            .collage-book.left {
-                transform: translate(calc(-50% - 90px), 25px) rotate(-15deg);
-            }
-            
-            .collage-book.center {
-                transform: translate(-50%, -15px) scale(1.1);
-            }
-            
-            .collage-book.right {
-                transform: translate(calc(-50% + 90px), 25px) rotate(15deg);
-            }
-            
-            .series-name-large {
-                font-size: 1.8em;
-            }
-            
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .series-header { padding: 20px; }
+            .series-cover-collage { height: 320px; max-width: 400px; }
+            .collage-book { width: 150px; height: 225px; }
+            .collage-book.left { transform: translate(calc(-50% - 90px), 25px) rotate(-15deg); }
+            .collage-book.center { transform: translate(-50%, -15px) scale(1.1); }
+            .collage-book.right { transform: translate(calc(-50% + 90px), 25px) rotate(15deg); }
+            .series-name-large { font-size: 1.8em; }
+            .books-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 480px) {
-            .series-cover-collage {
-                height: 260px;
-                max-width: 320px;
-            }
-            
-            .collage-book {
-                width: 120px;
-                height: 180px;
-                border-width: 2px;
-            }
-            
-            .collage-book.left {
-                transform: translate(calc(-50% - 70px), 20px) rotate(-12deg);
-            }
-            
-            .collage-book.center {
-                transform: translate(-50%, -10px) scale(1.05);
-            }
-            
-            .collage-book.right {
-                transform: translate(calc(-50% + 70px), 20px) rotate(12deg);
-            }
-            
-            .series-name-large {
-                font-size: 1.4em;
-            }
+            .series-cover-collage { height: 260px; max-width: 320px; }
+            .collage-book { width: 120px; height: 180px; border-width: 2px; }
+            .collage-book.left { transform: translate(calc(-50% - 70px), 20px) rotate(-12deg); }
+            .collage-book.center { transform: translate(-50%, -10px) scale(1.05); }
+            .collage-book.right { transform: translate(calc(-50% + 70px), 20px) rotate(12deg); }
+            .series-name-large { font-size: 1.4em; }
         }
     </style>
 </head>
@@ -442,40 +381,41 @@ const booksTitle = document.getElementById('booksTitle');
 
 // Функция для получения правильной ссылки (автор или издательство)
 function getAuthorOrPublisherLink(name) {
-    // Проверяем, есть ли такой издатель
     const publisher = PUBLISHERS_DATA.find(p => p.name === name);
     if (publisher) {
         return `publisher.html?name=${encodeURIComponent(name)}`;
     }
     
-    // Проверяем, есть ли такой автор
     const author = AUTHORS_DATA.find(a => a.name === name);
     if (author) {
         return `author.html?name=${encodeURIComponent(name)}`;
     }
     
-    // По умолчанию возвращаем author.html (на случай если данные ещё не добавлены)
     return `author.html?name=${encodeURIComponent(name)}`;
+}
+
+// Функция для получения отображаемого имени (без повтора "Издательство")
+function getDisplayName(name) {
+    if (name.startsWith('Издательство ')) {
+        return name.replace('Издательство ', '');
+    }
+    return name;
 }
 
 if (series) {
     const seriesBooks = BOOKS_DATA.filter(b => b.series === series.name);
     
-    // Определяем текст для ссылки (автор или издательство)
-    let authorOrPublisher = series.author;
-    const linkText = authorOrPublisher.includes('Издательство') ? 'Издательство' : 'Автор';
-    
-    // Убираем повторяющееся слово "Издательство"
-    if (linkText === 'Издательство' && authorOrPublisher.startsWith('Издательство ')) {
-        authorOrPublisher = authorOrPublisher.replace('Издательство ', '');
-    }
+    // Определяем тип (автор или издательство)
+    const isPublisher = series.author.includes('Издательство');
+    const linkText = isPublisher ? 'Издательство' : 'Автор';
+    const displayName = getDisplayName(series.author);
     
     container.innerHTML = `
         <div class="series-header">
             <div class="series-cover-collage" id="coverCollage"></div>
             <h1 class="series-name-large">${series.name}</h1>
             <p class="series-author-name">
-                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${authorOrPublisher}</a>
+                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${displayName}</a>
             </p>
             <div class="series-stats">
                 <div class="stat-item">
@@ -491,7 +431,7 @@ if (series) {
         
         ${series.description ? `
         <div class="series-description">
-            <h2>📜 О серии</h2>
+            <h2> О серии</h2>
             <p>${series.description}</p>
         </div>
         ` : ''}
