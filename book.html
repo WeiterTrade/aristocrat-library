@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книга - Библиотека</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2a4a7c;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
+            color: #ffffff;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background-color: rgba(0, 55, 145, 0.6);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .back-button:hover {
+            background-color: rgba(0, 55, 145, 0.9);
+            transform: translateX(-3px);
+        }
+
+        .book-header {
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0,55,145,0.6) 0%, rgba(42,74,124,0.4) 100%);
+            border: 4px solid #ffffff;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .book-cover-large {
+            width: 300px;
+            height: auto;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 4px solid #ffd700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .book-info-large {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .book-title-large {
+            font-size: 2.5em;
+            margin: 0 0 15px 0;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        }
+
+        .book-author-large {
+            font-size: 1.5em;
+            color: #a0c4ff;
+            margin: 0 0 10px 0;
+            font-style: italic;
+        }
+
+        .book-author-large a {
+            color: #a0c4ff;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .book-author-large a:hover {
+            border-bottom-color: #ffd700;
+        }
+
+        .book-series-large {
+            font-size: 1.2em;
+            color: #ffffff;
+            margin: 0 0 20px 0;
+            padding: 10px 20px;
+            background-color: rgba(0, 55, 145, 0.5);
+            border-radius: 6px;
+            display: inline-block;
+            border: 2px solid #ffffff;
+        }
+
+        .book-series-large a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .book-series-large a:hover {
+            color: #ffd700;
+        }
+
+        .book-description-large {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #ffffff;
+            margin: 20px 0;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        .download-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .download-title {
+            font-size: 1.3em;
+            color: #ffd700;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .download-btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn-epub { background: linear-gradient(135deg, #28a745, #20c997); }
+        .btn-pdf { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .btn-audio { background: linear-gradient(135deg, #ffc107, #ff9800); color: #000; }
+
+        .related-books {
+            margin-top: 40px;
+        }
+
+        .related-title {
+            font-size: 2em;
+            color: #ffd700;
+            margin: 0 0 30px 0;
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .book-card {
+            background-color: rgba(0, 55, 145, 0.4);
+            border: 3px solid #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-cover-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .book-cover {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-bottom: 3px solid #ffffff;
+        }
+
+        .book-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 0 0 8px 0;
+        }
+
+        .book-title a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .book-title a:hover {
+            text-decoration: underline;
+        }
+
+        .book-series {
+            font-size: 12px;
+            color: #a0c4ff;
+            margin: 0 0 8px 0;
+            font-style: italic;
+        }
+
+        .book-series a {
+            color: #a0c4ff;
+            text-decoration: none;
+        }
+
+        .book-series a:hover {
+            color: #ffd700;
+        }
+
+        .download-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin: 10px 0 8px 0;
+            padding: 6px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .book-formats {
+            display: flex;
+            gap: 6px;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+
+        .format-btn {
+            flex: 1;
+            padding: 8px 5px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            color: #ffffff;
+            transition: opacity 0.3s;
+            min-width: 60px;
+        }
+
+        .format-btn:hover { opacity: 0.8; }
+        .format-btn.epub { background-color: #28a745; }
+        .format-btn.pdf { background-color: #dc3545; }
+        .format-btn.audio { background-color: #ffc107; color: #000; }
+
+        .error-message {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.5em;
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .book-header {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+            
+            .book-cover-large {
+                width: 250px;
+            }
+            
+            .book-title-large {
+                font-size: 1.8em;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .book-info { padding: 12px; }
+            .book-title { font-size: 14px; }
+            .book-series { font-size: 11px; }
+            .format-btn { padding: 6px 3px; font-size: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .book-cover-large {
+                width: 200px;
+            }
+            
+            .book-title-large {
+                font-size: 1.5em;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .book-info { padding: 8px; }
+            .book-title { font-size: 12px; }
+            .book-series { font-size: 9px; }
+            .format-btn { padding: 4px 2px; font-size: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="библиотека.html" class="back-button">← Вернуться в библиотеку</a>
+    <div id="bookContainer"></div>
+    <div class="related-books" id="relatedBooks" style="display: none;">
+        <h2 class="related-title">📚 Другие книги автора</h2>
+        <div class="books-grid" id="relatedBooksGrid"></div>
+    </div>
+</div>
+
+<script src="books-data.js"></script>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const bookId = parseInt(urlParams.get('id'));
+const book = BOOKS_DATA.find(b => b.id === bookId);
+
+const container = document.getElementById('bookContainer');
+const relatedBooksGrid = document.getElementById('relatedBooksGrid');
+const relatedBooksSection = document.getElementById('relatedBooks');
+
+if (book) {
+    container.innerHTML = `
+        <div class="book-header">
+            <img src="${book.cover}" alt="${book.title}" class="book-cover-large">
+            <div class="book-info-large">
+                <h1 class="book-title-large">${book.title}</h1>
+                <p class="book-author-large">✍️ <a href="author.html?name=${encodeURIComponent(book.author)}">${book.author}</a></p>
+                ${book.series ? `<div class="book-series-large">📖 <a href="series.html?name=${encodeURIComponent(book.series)}">${book.series}</a></div>` : ''}
+                <p class="book-description-large">${book.fullDescription || book.description}</p>
+                
+                <div class="download-section">
+                    <h3 class="download-title">⬇️ Скачать книгу</h3>
+                    <div class="download-buttons">
+                        ${book.formats.epub && book.formats.epub !== '#' ? `<a href="${book.formats.epub}" class="download-btn btn-epub">📖 EPUB</a>` : ''}
+                        ${book.formats.pdf && book.formats.pdf !== '#' ? `<a href="${book.formats.pdf}" class="download-btn btn-pdf">📄 PDF</a>` : ''}
+                        ${book.formats.audio && book.formats.audio !== '#' ? `<a href="${book.formats.audio}" class="download-btn btn-audio">🎧 АУДИО</a>` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const relatedBooks = BOOKS_DATA.filter(b => b.author === book.author && b.id !== book.id);
+    
+    if (relatedBooks.length > 0) {
+        relatedBooks.forEach(relatedBook => {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            
+            let formatsHTML = '';
+            if (relatedBook.formats.epub && relatedBook.formats.epub !== '#') {
+                formatsHTML += `<a href="${relatedBook.formats.epub}" class="format-btn epub">EPUB</a>`;
+            }
+            if (relatedBook.formats.pdf && relatedBook.formats.pdf !== '#') {
+                formatsHTML += `<a href="${relatedBook.formats.pdf}" class="format-btn pdf">PDF</a>`;
+            }
+            if (relatedBook.formats.audio && relatedBook.formats.audio !== '#') {
+                formatsHTML += `<a href="${relatedBook.formats.audio}" class="format-btn audio">АУДИО</a>`;
+            }
+            
+            if (!formatsHTML) {
+                formatsHTML = '<span style="font-size: 11px; color: #a0c4ff; text-align: center; display: block; width: 100%;">Форматы недоступны</span>';
+            }
+            
+            card.innerHTML = `
+                <a href="book.html?id=${relatedBook.id}" class="book-cover-link">
+                    <img src="${relatedBook.cover}" alt="${relatedBook.title}" class="book-cover">
+                </a>
+                <div class="book-info">
+                    <h3 class="book-title"><a href="book.html?id=${relatedBook.id}">${relatedBook.title}</a></h3>
+                    ${relatedBook.series ? `<p class="book-series">📖 <a href="series.html?name=${encodeURIComponent(relatedBook.series)}">${relatedBook.series}</a></p>` : ''}
+                    <div class="download-label">⬇️ Скачать</div>
+                    <div class="book-formats">${formatsHTML}</div>
+                </div>
+            `;
+            relatedBooksGrid.appendChild(card);
+        });
+        relatedBooksSection.style.display = 'block';
+    }
+
+    document.title = `${book.title} - ${book.author} - Библиотека`;
+} else {
+    container.innerHTML = `
+        <div class="error-message">
+            <h2>😕 Книга не найдена</h2>
+            <a href="библиотека.html" class="back-button">Вернуться в библиотеку</a>
+        </div>
+    `;
+}
+</script>
+
+</body>
+</html>

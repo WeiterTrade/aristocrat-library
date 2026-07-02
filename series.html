@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Серия - Библиотека</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2a4a7c;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
+            color: #ffffff;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background-color: rgba(0, 55, 145, 0.6);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .back-button:hover {
+            background-color: rgba(0, 55, 145, 0.9);
+            transform: translateX(-3px);
+        }
+
+        .series-header {
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0,55,145,0.6) 0%, rgba(42,74,124,0.4) 100%);
+            border: 4px solid #ffffff;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .series-cover-collage {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 380px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .collage-book {
+            position: absolute;
+            width: 180px;
+            height: 270px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 3px solid #ffffff;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            background-color: #1a1a2e;
+        }
+
+        .collage-book img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .collage-book.left {
+            left: 50%;
+            transform: translate(calc(-50% - 110px), 30px) rotate(-15deg);
+            z-index: 1;
+        }
+
+        .collage-book.center {
+            left: 50%;
+            transform: translate(-50%, -20px) scale(1.15);
+            z-index: 3;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+
+        .collage-book.right {
+            left: 50%;
+            transform: translate(calc(-50% + 110px), 30px) rotate(15deg);
+            z-index: 1;
+        }
+
+        .series-cover-collage:hover .collage-book.left {
+            transform: translate(calc(-50% - 130px), 20px) rotate(-18deg);
+        }
+
+        .series-cover-collage:hover .collage-book.center {
+            transform: translate(-50%, -30px) scale(1.2);
+        }
+
+        .series-cover-collage:hover .collage-book.right {
+            transform: translate(calc(-50% + 130px), 20px) rotate(18deg);
+        }
+
+        .collage-book.single {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+
+        .series-cover-collage:hover .collage-book.single {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .collage-book.two-left {
+            left: 50%;
+            transform: translate(calc(-50% - 80px), 0) rotate(-8deg);
+            z-index: 1;
+        }
+
+        .collage-book.two-right {
+            left: 50%;
+            transform: translate(calc(-50% + 80px), 0) rotate(8deg);
+            z-index: 2;
+        }
+
+        .series-cover-collage:hover .collage-book.two-left {
+            transform: translate(calc(-50% - 100px), -10px) rotate(-12deg);
+        }
+
+        .series-cover-collage:hover .collage-book.two-right {
+            transform: translate(calc(-50% + 100px), -10px) rotate(12deg);
+        }
+
+        .series-name-large {
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        }
+
+        .series-author-name {
+            font-size: 1.3em;
+            color: #a0c4ff;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        .series-author-name a {
+            color: #a0c4ff;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .series-author-name a:hover {
+            border-bottom-color: #ffd700;
+        }
+
+        .series-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background-color: rgba(0, 55, 145, 0.5);
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 2px solid #ffffff;
+        }
+
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffd700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #ffffff;
+        }
+
+        .series-description {
+            background: linear-gradient(135deg, rgba(0,55,145,0.4) 0%, rgba(42,74,124,0.3) 100%);
+            border: 3px solid #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .series-description h2 {
+            font-size: 1.8em;
+            color: #ffd700;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .series-description p {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin: 0 0 15px 0;
+            text-align: justify;
+        }
+
+        .books-section-title {
+            text-align: center;
+            font-size: 2em;
+            color: #ffd700;
+            margin: 30px 0 20px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .book-card {
+            background-color: rgba(0, 55, 145, 0.4);
+            border: 3px solid #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-cover-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .book-cover {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-bottom: 3px solid #ffffff;
+        }
+
+        .book-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 0 0 8px 0;
+        }
+
+        .book-title a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .book-title a:hover {
+            text-decoration: underline;
+        }
+
+        .book-author {
+            font-size: 13px;
+            color: #ffffff;
+            margin: 0 0 8px 0;
+        }
+
+        .book-author a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .book-author a:hover {
+            color: #ffd700;
+        }
+
+        /* Кнопки скачивания */
+        .download-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin: 10px 0 8px 0;
+            padding: 6px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .book-formats {
+            display: flex;
+            gap: 6px;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+
+        .format-btn {
+            flex: 1;
+            padding: 8px 5px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            color: #ffffff;
+            transition: opacity 0.3s;
+            min-width: 60px;
+        }
+
+        .format-btn:hover { opacity: 0.8; }
+        .format-btn.epub { background-color: #28a745; }
+        .format-btn.pdf { background-color: #dc3545; }
+        .format-btn.audio { background-color: #ffc107; color: #000; }
+
+        .error-message {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.5em;
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .series-header {
+                padding: 20px;
+            }
+            
+            .series-cover-collage {
+                height: 320px;
+                max-width: 400px;
+            }
+            
+            .collage-book {
+                width: 150px;
+                height: 225px;
+            }
+            
+            .collage-book.left {
+                transform: translate(calc(-50% - 90px), 25px) rotate(-15deg);
+            }
+            
+            .collage-book.center {
+                transform: translate(-50%, -15px) scale(1.1);
+            }
+            
+            .collage-book.right {
+                transform: translate(calc(-50% + 90px), 25px) rotate(15deg);
+            }
+            
+            .series-name-large {
+                font-size: 1.8em;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .series-cover-collage {
+                height: 260px;
+                max-width: 320px;
+            }
+            
+            .collage-book {
+                width: 120px;
+                height: 180px;
+                border-width: 2px;
+            }
+            
+            .collage-book.left {
+                transform: translate(calc(-50% - 70px), 20px) rotate(-12deg);
+            }
+            
+            .collage-book.center {
+                transform: translate(-50%, -10px) scale(1.05);
+            }
+            
+            .collage-book.right {
+                transform: translate(calc(-50% + 70px), 20px) rotate(12deg);
+            }
+            
+            .series-name-large {
+                font-size: 1.4em;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .book-info { padding: 8px; }
+            .book-title { font-size: 12px; }
+            .book-author { font-size: 10px; }
+            
+            .format-btn { padding: 6px 3px; font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="библиотека.html" class="back-button">← Вернуться в библиотеку</a>
+    <div id="seriesContainer"></div>
+    <h2 class="books-section-title" id="booksTitle" style="display: none;">📚 Книги серии</h2>
+    <div class="books-grid" id="booksGrid"></div>
+</div>
+
+<script src="books-data.js"></script>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const seriesName = urlParams.get('name');
+const series = SERIES_DATA.find(s => s.name === seriesName);
+
+const container = document.getElementById('seriesContainer');
+const booksGrid = document.getElementById('booksGrid');
+const booksTitle = document.getElementById('booksTitle');
+
+if (series) {
+    const seriesBooks = BOOKS_DATA.filter(b => b.series === series.name);
+    
+    container.innerHTML = `
+        <div class="series-header">
+            <div class="series-cover-collage" id="coverCollage"></div>
+            <h1 class="series-name-large">${series.name}</h1>
+            <p class="series-author-name">️ <a href="author.html?name=${encodeURIComponent(series.author)}">${series.author}</a></p>
+            <div class="series-stats">
+                <div class="stat-item">
+                    <span class="stat-number">${seriesBooks.length}</span>
+                    <span class="stat-label">📚 Книг</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">${[...new Set(seriesBooks.map(b => b.author))].length}</span>
+                    <span class="stat-label">✍️ Авторов</span>
+                </div>
+            </div>
+        </div>
+        
+        ${series.description ? `
+        <div class="series-description">
+            <h2>📜 О серии</h2>
+            <p>${series.description}</p>
+        </div>
+        ` : ''}
+    `;
+    
+    setupCollage(seriesBooks);
+    
+    if (seriesBooks.length > 0) {
+        booksTitle.style.display = 'block';
+        seriesBooks.forEach(book => {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            
+            let formatsHTML = '';
+            if (book.formats.epub) {
+                formatsHTML += `<a href="${book.formats.epub}" class="format-btn epub">EPUB</a>`;
+            }
+            if (book.formats.pdf) {
+                formatsHTML += `<a href="${book.formats.pdf}" class="format-btn pdf">PDF</a>`;
+            }
+            if (book.formats.audio) {
+                formatsHTML += `<a href="${book.formats.audio}" class="format-btn audio">АУДИО</a>`;
+            }
+            
+            card.innerHTML = `
+                <a href="book.html?id=${book.id}" class="book-cover-link">
+                    <img src="${book.cover}" alt="${book.title}" class="book-cover">
+                </a>
+                <div class="book-info">
+                    <h3 class="book-title"><a href="book.html?id=${book.id}">${book.title}</a></h3>
+                    <p class="book-author">✍️ <a href="author.html?name=${encodeURIComponent(book.author)}">${book.author}</a></p>
+                    <div class="download-label">️ Скачать</div>
+                    <div class="book-formats">${formatsHTML}</div>
+                </div>
+            `;
+            booksGrid.appendChild(card);
+        });
+    }
+    
+    document.title = `${series.name} - Библиотека`;
+} else {
+    container.innerHTML = `
+        <div class="error-message">
+            <h2> Серия не найдена</h2>
+            <a href="библиотека.html" class="back-button">Вернуться в библиотеку</a>
+        </div>
+    `;
+}
+
+function setupCollage(books) {
+    const collage = document.getElementById('coverCollage');
+    if (!collage || books.length === 0) return;
+    
+    const shuffled = [...books].sort(() => 0.5 - Math.random());
+    
+    if (books.length === 1) {
+        collage.innerHTML = `
+            <div class="collage-book single">
+                <img src="${shuffled[0].cover}" alt="${shuffled[0].title}" title="${shuffled[0].title}">
+            </div>
+        `;
+    } else if (books.length === 2) {
+        collage.innerHTML = `
+            <div class="collage-book two-left">
+                <img src="${shuffled[0].cover}" alt="${shuffled[0].title}" title="${shuffled[0].title}">
+            </div>
+            <div class="collage-book two-right">
+                <img src="${shuffled[1].cover}" alt="${shuffled[1].title}" title="${shuffled[1].title}">
+            </div>
+        `;
+    } else {
+        const selected = shuffled.slice(0, 3);
+        collage.innerHTML = `
+            <div class="collage-book left">
+                <img src="${selected[0].cover}" alt="${selected[0].title}" title="${selected[0].title}">
+            </div>
+            <div class="collage-book center">
+                <img src="${selected[1].cover}" alt="${selected[1].title}" title="${selected[1].title}">
+            </div>
+            <div class="collage-book right">
+                <img src="${selected[2].cover}" alt="${selected[2].title}" title="${selected[2].title}">
+            </div>
+        `;
+    }
+}
+</script>
+
+</body>
+</html>
