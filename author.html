@@ -32,6 +32,7 @@
             font-weight: bold;
             margin-bottom: 30px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .back-button:hover {
@@ -251,6 +252,29 @@
             color: #ffd700;
         }
 
+        .error-message h2 {
+            margin-bottom: 30px;
+        }
+
+        .error-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: rgba(0, 55, 145, 0.6);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .error-button:hover {
+            background-color: rgba(0, 55, 145, 0.9);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .author-header {
                 flex-direction: column;
@@ -303,16 +327,36 @@
 <body>
 
 <div class="container">
-    <a href="index.html" class="back-button">← Вернуться в библиотеку</a>
+    <a href="index.html" class="back-button" onclick="goBack(); return false;">← Вернуться в библиотеку</a>
     <div id="authorContainer"></div>
-    <h2 class="books-section-title" id="booksTitle" style="display: none;"> Книги автора</h2>
+    <h2 class="books-section-title" id="booksTitle" style="display: none;">📚 Книги автора</h2>
     <div class="books-grid" id="booksGrid"></div>
 </div>
 
 <script src="books-data.js"></script>
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const authorName = urlParams.get('name');
+// Исправленная функция для работы с URL
+function getAuthorFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let authorName = urlParams.get('name');
+    
+    if (!authorName) return null;
+    
+    // Декодируем URL и исправляем возможные проблемы с кодировкой
+    try {
+        authorName = decodeURIComponent(authorName);
+    } catch (e) {
+        console.error('Error decoding URL:', e);
+    }
+    
+    return authorName.trim();
+}
+
+function goBack() {
+    window.location.href = 'index.html';
+}
+
+const authorName = getAuthorFromURL();
 const author = AUTHORS_DATA.find(a => a.name === authorName);
 
 const container = document.getElementById('authorContainer');
@@ -327,7 +371,7 @@ if (author) {
             <img src="${author.photo}" alt="${author.name}" class="author-photo-large">
             <div class="author-info">
                 <h1 class="author-name-large">${author.name}</h1>
-                <p class="author-years">${author.birth} — ${author.death}</p>
+                <p class="author-years">${author.birth || ''} ${author.death ? '— ' + author.death : ''}</p>
                 <div class="author-stats">
                     <div class="stat-item">
                         <span class="stat-number">${authorBooks.length}</span>
@@ -335,7 +379,7 @@ if (author) {
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">${[...new Set(authorBooks.map(b => b.series))].filter(s => s).length}</span>
-                        <span class="stat-label"> Серий</span>
+                        <span class="stat-label">📖 Серий</span>
                     </div>
                 </div>
             </div>
@@ -388,12 +432,17 @@ if (author) {
     
     document.title = `${author.name} - Библиотека`;
 } else {
+    // Показываем улучшенное сообщение об ошибке
     container.innerHTML = `
         <div class="error-message">
             <h2>😕 Автор не найден</h2>
-            <a href="библиотека.html" class="back-button">Вернуться в библиотеку</a>
+            <p style="font-size: 0.7em; margin: 20px 0; color: #a0c4ff;">
+                ${authorName ? `Запрошенный автор: "${authorName}"` : 'Автор не указан в URL'}
+            </p>
+            <a href="index.html" class="error-button" onclick="goBack(); return false;">Вернуться в библиотеку</a>
         </div>
     `;
+    document.title = 'Автор не найден - Библиотека';
 }
 </script>
 
