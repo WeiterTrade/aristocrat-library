@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Библиотека книг - Возвращение с Западного фронта</title>
+    <title>Библиотека - Aristocrat</title>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
             font-family: Arial, sans-serif;
@@ -17,6 +17,76 @@
             min-height: 100vh;
         }
 
+        /* ===== ВЕРХНИЙ БАР НАВИГАЦИИ ===== */
+        .top-navbar {
+            background: linear-gradient(135deg, #0066b3 0%, #0055a0 100%);
+            padding: 0;
+            margin: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 0;
+        }
+
+        .navbar-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffd700;
+            padding: 5px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 5px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .navbar-menu a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 20px 15px;
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .navbar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            border-bottom-color: #ffd700;
+        }
+
+        .navbar-menu a.active {
+            background: rgba(255,255,255,0.15);
+            border-bottom-color: #ffd700;
+        }
+
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 
         .page-header {
@@ -26,7 +96,7 @@
             background-attachment: fixed;
             border: 4px solid #ffffff;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 20px 0;
             position: relative;
             min-height: 250px;
             display: flex;
@@ -50,7 +120,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
         }
 
-        /* ===== СТРОКА "ПРОГРАММЫ ДЛЯ КНИГ" ===== */
         .programs-bar {
             display: flex;
             align-items: center;
@@ -174,7 +243,6 @@
         }
         .filter-select option { background-color: #003791; color: #ffffff; }
 
-        /* ===== СЕТКА КНИГ ===== */
         .books-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -283,7 +351,6 @@
         .format-btn.pdf { background-color: #dc3545; }
         .format-btn.audio { background-color: #ffc107; color: #000; }
 
-        /* ===== ПАГИНАЦИЯ ===== */
         .pagination {
             display: flex;
             justify-content: center;
@@ -375,7 +442,6 @@
             font-size: 13px; color: #ffffff;
         }
 
-        /* ===== СЕТКА СЕРИЙ С ПРЕВЬЮ ОБЛОЖЕК ===== */
         .series-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -399,7 +465,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
-        /* ===== ПРЕВЬЮ ОБЛОЖЕК В КАРТОЧКАХ СЕРИЙ ===== */
         .series-covers-preview {
             position: relative;
             width: 100%;
@@ -450,7 +515,6 @@
             transform: translateX(50px) rotate(15deg);
         }
 
-        /* Если в серии только 1 книга */
         .series-cover-thumb.single {
             position: relative;
             width: 80px;
@@ -462,7 +526,6 @@
             transform: scale(1.1) !important;
         }
 
-        /* Если в серии только 2 книги */
         .series-cover-thumb.two-left {
             transform: translateX(-25px) rotate(-6deg);
         }
@@ -494,24 +557,33 @@
             font-size: 18px; color: #ffd700;
         }
 
-        /* ========== АДАПТАЦИЯ ПОД ПЛАНШЕТЫ ========== */
-        @media (max-width: 1024px) {
-            .books-grid { 
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 20px;
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                padding: 10px;
             }
             
-            .book-info { padding: 12px; }
-            .book-title { font-size: 15px; }
-            .book-author { font-size: 12px; }
-            .book-description { font-size: 11px; }
+            .navbar-logo {
+                font-size: 16px;
+                padding: 10px 0;
+            }
             
-            .programs-link-text { font-size: 16px; }
-            .platform-icon { width: 36px; height: 36px; }
-        }
-
-        /* ========== АДАПТАЦИЯ ПОД МОБИЛЬНЫЕ ========== */
-        @media (max-width: 768px) {
+            .navbar-logo img {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .navbar-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .navbar-menu a {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+            
             .container { padding: 10px; }
             
             .page-header {
@@ -520,7 +592,7 @@
                 background-size: cover;
                 background-position: center 30%;
                 min-height: 180px;
-                margin-bottom: 15px;
+                margin: 15px 0;
             }
             
             .page-header h1 { font-size: 1.6em; }
@@ -593,7 +665,6 @@
             .series-author { font-size: 12px; }
             .series-books-count { font-size: 11px; }
             
-            /* Превью обложек на планшетах */
             .series-covers-preview {
                 height: 110px;
             }
@@ -612,7 +683,6 @@
             }
         }
 
-        /* Для очень маленьких экранов */
         @media (max-width: 480px) {
             .page-header {
                 padding: 30px 10px;
@@ -667,7 +737,6 @@
             .author-photo { width: 80px; height: 80px; }
             .author-name { font-size: 12px; }
             
-            /* Превью обложек на телефонах */
             .series-covers-preview {
                 height: 90px;
             }
@@ -689,6 +758,24 @@
     </style>
 </head>
 <body>
+
+<!-- ВЕРХНИЙ БАР НАВИГАЦИИ -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="https://sites.google.com/view/aristocrat-inc" class="navbar-logo">
+            <img src="https://via.placeholder.com/40x40/ffd700/000?text=A" alt="Aristocrat">
+            Aristocrat Inc
+        </a>
+        <ul class="navbar-menu">
+            <li><a href="https://sites.google.com/view/aristocrat-inc">🏠 Главная</a></li>
+            <li><a href="https://sites.google.com/view/aristocrat-inc/софт">💾 Софт</a></li>
+            <li><a href="https://sites.google.com/view/aristocrat-inc/образы-windows">🟡 Образы Windows</a></li>
+            <li><a href="https://sites.google.com/view/aristocrat-inc/microsoft-office">🟡 Microsoft Office</a></li>
+            <li><a href="https://sites.google.com/view/aristocrat-inc/компоненты-драйвера">📦 Компоненты/Драйвера</a></li>
+            <li><a href="https://sites.google.com/view/aristocrat-inc/дополнительно"> Дополнительно</a></li>
+        </ul>
+    </div>
+</nav>
 
 <div class="container">
     <div class="page-header">
@@ -756,25 +843,15 @@
     </div>
 </div>
 
-<!-- Подключаем единую базу данных -->
 <script src="books-data.js"></script>
-
 <script>
-// =====================================================
-// НАСТРОЙКИ ПАГИНАЦИИ
-// =====================================================
 const BOOKS_PER_PAGE = 15;
 let currentPage = 1;
 let currentFilteredBooks = [];
-
-// Используем данные из общего файла
 const booksData = BOOKS_DATA;
 const authorsData = AUTHORS_DATA;
 const seriesData = SERIES_DATA;
 
-// =====================================================
-// НАВИГАЦИЯ
-// =====================================================
 function showSection(section, tab) {
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
@@ -797,9 +874,6 @@ function showSection(section, tab) {
     renderAll();
 }
 
-// =====================================================
-// ОТРИСОВКА КНИГ (с кнопками скачивания)
-// =====================================================
 function renderBooks(books) {
     currentFilteredBooks = books;
     
@@ -825,7 +899,6 @@ function renderBooks(books) {
         const card = document.createElement('div');
         card.className = 'book-card';
         
-        // Формируем кнопки скачивания
         let formatsHTML = '';
         if (book.formats.epub && book.formats.epub !== '#') {
             formatsHTML += `<a href="${book.formats.epub}" class="format-btn epub">EPUB</a>`;
@@ -837,7 +910,6 @@ function renderBooks(books) {
             formatsHTML += `<a href="${book.formats.audio}" class="format-btn audio">АУДИО</a>`;
         }
         
-        // Если нет ни одного формата
         if (!formatsHTML) {
             formatsHTML = '<span style="font-size: 11px; color: #a0c4ff; text-align: center; display: block; width: 100%;">Форматы недоступны</span>';
         }
@@ -861,9 +933,6 @@ function renderBooks(books) {
     renderPagination(totalPages, books.length);
 }
 
-// =====================================================
-// ПАГИНАЦИЯ
-// =====================================================
 function renderPagination(totalPages, totalBooks) {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
@@ -910,9 +979,6 @@ function goToPage(page) {
     document.getElementById('booksSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// =====================================================
-// АВТОРЫ (с ссылками на страницы)
-// =====================================================
 function renderAuthors(authors) {
     const grid = document.getElementById('authorsGrid');
     grid.innerHTML = '';
@@ -938,9 +1004,6 @@ function renderAuthors(authors) {
     });
 }
 
-// =====================================================
-// СЕРИИ (с превью обложек и ссылками)
-// =====================================================
 function renderSeries(series) {
     const grid = document.getElementById('seriesGrid');
     grid.innerHTML = '';
@@ -959,21 +1022,17 @@ function renderSeries(series) {
         card.href = `series.html?name=${encodeURIComponent(s.name)}`;
         card.className = 'series-card';
         
-        // Формируем превью обложек в зависимости от количества книг
         let coversHTML = '';
         if (seriesBooks.length > 0) {
-            // Перемешиваем книги для разнообразия
             const shuffled = [...seriesBooks].sort(() => 0.5 - Math.random());
             
             if (seriesBooks.length === 1) {
-                // Одна книга — крупно по центру
                 coversHTML = `
                     <div class="series-covers-preview">
                         <img src="${shuffled[0].cover}" alt="${shuffled[0].title}" class="series-cover-thumb single" title="${shuffled[0].title}">
                     </div>
                 `;
             } else if (seriesBooks.length === 2) {
-                // Две книги
                 coversHTML = `
                     <div class="series-covers-preview">
                         <img src="${shuffled[0].cover}" alt="${shuffled[0].title}" class="series-cover-thumb two-left" title="${shuffled[0].title}">
@@ -981,7 +1040,6 @@ function renderSeries(series) {
                     </div>
                 `;
             } else {
-                // Три и больше — классический веер
                 const selected = shuffled.slice(0, 3);
                 coversHTML = `
                     <div class="series-covers-preview">
@@ -1004,9 +1062,6 @@ function renderSeries(series) {
     });
 }
 
-// =====================================================
-// ФИЛЬТРАЦИЯ
-// =====================================================
 function filterBooks() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const formatFilter = document.getElementById('formatFilter').value;
