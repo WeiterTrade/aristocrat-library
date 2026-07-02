@@ -31,6 +31,7 @@
             text-decoration: none;
             font-weight: bold;
             margin-bottom: 30px;
+            transition: all 0.3s;
         }
 
         .back-button:hover {
@@ -280,12 +281,13 @@
 
         .book-author {
             font-size: 13px;
-            color: #ffffff;
+            color: #a0c4ff;
             margin: 0 0 8px 0;
+            font-style: italic;
         }
 
         .book-author a {
-            color: #ffffff;
+            color: #a0c4ff;
             text-decoration: none;
         }
 
@@ -293,7 +295,22 @@
             color: #ffd700;
         }
 
-        /* Кнопки скачивания */
+        .book-series {
+            font-size: 12px;
+            color: #a0c4ff;
+            margin: 0 0 8px 0;
+            font-style: italic;
+        }
+
+        .book-series a {
+            color: #a0c4ff;
+            text-decoration: none;
+        }
+
+        .book-series a:hover {
+            color: #ffd700;
+        }
+
         .download-label {
             font-size: 12px;
             font-weight: bold;
@@ -401,17 +418,6 @@
             .series-name-large {
                 font-size: 1.4em;
             }
-            
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            
-            .book-info { padding: 8px; }
-            .book-title { font-size: 12px; }
-            .book-author { font-size: 10px; }
-            
-            .format-btn { padding: 6px 3px; font-size: 10px; }
         }
     </style>
 </head>
@@ -427,21 +433,45 @@
 <script src="books-data.js"></script>
 <script>
 const urlParams = new URLSearchParams(window.location.search);
-const seriesName = urlParams.get('name');
+const seriesName = decodeURIComponent(urlParams.get('name') || '');
 const series = SERIES_DATA.find(s => s.name === seriesName);
 
 const container = document.getElementById('seriesContainer');
 const booksGrid = document.getElementById('booksGrid');
 const booksTitle = document.getElementById('booksTitle');
 
+// Функция для получения правильной ссылки (автор или издательство)
+function getAuthorOrPublisherLink(name) {
+    // Проверяем, есть ли такой издатель
+    const publisher = PUBLISHERS_DATA.find(p => p.name === name);
+    if (publisher) {
+        return `publisher.html?name=${encodeURIComponent(name)}`;
+    }
+    
+    // Проверяем, есть ли такой автор
+    const author = AUTHORS_DATA.find(a => a.name === name);
+    if (author) {
+        return `author.html?name=${encodeURIComponent(name)}`;
+    }
+    
+    // По умолчанию возвращаем author.html (на случай если данные ещё не добавлены)
+    return `author.html?name=${encodeURIComponent(name)}`;
+}
+
 if (series) {
     const seriesBooks = BOOKS_DATA.filter(b => b.series === series.name);
+    
+    // Определяем текст для ссылки (автор или издательство)
+    const authorOrPublisher = series.author;
+    const linkText = authorOrPublisher.includes('Издательство') ? 'Издательство' : 'Автор';
     
     container.innerHTML = `
         <div class="series-header">
             <div class="series-cover-collage" id="coverCollage"></div>
             <h1 class="series-name-large">${series.name}</h1>
-            <p class="series-author-name">️ <a href="author.html?name=${encodeURIComponent(series.author)}">${series.author}</a></p>
+            <p class="series-author-name">
+                ${linkText}: <a href="${getAuthorOrPublisherLink(authorOrPublisher)}">${authorOrPublisher}</a>
+            </p>
             <div class="series-stats">
                 <div class="stat-item">
                     <span class="stat-number">${seriesBooks.length}</span>
@@ -471,14 +501,18 @@ if (series) {
             card.className = 'book-card';
             
             let formatsHTML = '';
-            if (book.formats.epub) {
+            if (book.formats.epub && book.formats.epub !== '#') {
                 formatsHTML += `<a href="${book.formats.epub}" class="format-btn epub">EPUB</a>`;
             }
-            if (book.formats.pdf) {
+            if (book.formats.pdf && book.formats.pdf !== '#') {
                 formatsHTML += `<a href="${book.formats.pdf}" class="format-btn pdf">PDF</a>`;
             }
-            if (book.formats.audio) {
+            if (book.formats.audio && book.formats.audio !== '#') {
                 formatsHTML += `<a href="${book.formats.audio}" class="format-btn audio">АУДИО</a>`;
+            }
+            
+            if (!formatsHTML) {
+                formatsHTML = '<span style="font-size: 11px; color: #a0c4ff; text-align: center; display: block; width: 100%;">Форматы недоступны</span>';
             }
             
             card.innerHTML = `
@@ -487,8 +521,8 @@ if (series) {
                 </a>
                 <div class="book-info">
                     <h3 class="book-title"><a href="book.html?id=${book.id}">${book.title}</a></h3>
-                    <p class="book-author">✍️ <a href="author.html?name=${encodeURIComponent(book.author)}">${book.author}</a></p>
-                    <div class="download-label">️ Скачать</div>
+                    <p class="book-author">✍️ <a href="${getAuthorOrPublisherLink(book.author)}">${book.author}</a></p>
+                    <div class="download-label">⬇️ Скачать</div>
                     <div class="book-formats">${formatsHTML}</div>
                 </div>
             `;
@@ -500,8 +534,8 @@ if (series) {
 } else {
     container.innerHTML = `
         <div class="error-message">
-            <h2> Серия не найдена</h2>
-            <a href="библиотека.html" class="back-button">Вернуться в библиотеку</a>
+            <h2>😕 Серия не найдена</h2>
+            <a href="index.html" class="back-button">Вернуться в библиотеку</a>
         </div>
     `;
 }
