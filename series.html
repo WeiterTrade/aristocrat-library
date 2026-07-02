@@ -462,15 +462,20 @@ if (series) {
     const seriesBooks = BOOKS_DATA.filter(b => b.series === series.name);
     
     // Определяем текст для ссылки (автор или издательство)
-    const authorOrPublisher = series.author;
+    let authorOrPublisher = series.author;
     const linkText = authorOrPublisher.includes('Издательство') ? 'Издательство' : 'Автор';
+    
+    // Убираем повторяющееся слово "Издательство"
+    if (linkText === 'Издательство' && authorOrPublisher.startsWith('Издательство ')) {
+        authorOrPublisher = authorOrPublisher.replace('Издательство ', '');
+    }
     
     container.innerHTML = `
         <div class="series-header">
             <div class="series-cover-collage" id="coverCollage"></div>
             <h1 class="series-name-large">${series.name}</h1>
             <p class="series-author-name">
-                ${linkText}: <a href="${getAuthorOrPublisherLink(authorOrPublisher)}">${authorOrPublisher}</a>
+                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${authorOrPublisher}</a>
             </p>
             <div class="series-stats">
                 <div class="stat-item">
