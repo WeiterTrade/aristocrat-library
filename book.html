@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Книга - Библиотека</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    
     <style>
         * { box-sizing: border-box; }
         
@@ -359,13 +367,27 @@ const container = document.getElementById('bookContainer');
 const relatedBooksGrid = document.getElementById('relatedBooksGrid');
 const relatedBooksSection = document.getElementById('relatedBooks');
 
+// Функция для поиска издательства
+function findPublisher(name) {
+    return PUBLISHERS_DATA.find(p => p.name === name || p.fullName === name);
+}
+
+// Функция для получения правильной ссылки
+function getAuthorOrPublisherLink(name) {
+    const publisher = findPublisher(name);
+    if (publisher) {
+        return `publisher.html?name=${encodeURIComponent(publisher.name)}`;
+    }
+    return `author.html?name=${encodeURIComponent(name)}`;
+}
+
 if (book) {
     container.innerHTML = `
         <div class="book-header">
             <img src="${book.cover}" alt="${book.title}" class="book-cover-large">
             <div class="book-info-large">
                 <h1 class="book-title-large">${book.title}</h1>
-                <p class="book-author-large">✍️ <a href="author.html?name=${encodeURIComponent(book.author)}">${book.author}</a></p>
+                <p class="book-author-large">️ <a href="${getAuthorOrPublisherLink(book.author)}">${book.author}</a></p>
                 ${book.series ? `<div class="book-series-large">📖 <a href="series.html?name=${encodeURIComponent(book.series)}">${book.series}</a></div>` : ''}
                 <p class="book-description-large">${book.fullDescription || book.description}</p>
                 
@@ -410,7 +432,7 @@ if (book) {
                 <div class="book-info">
                     <h3 class="book-title"><a href="book.html?id=${relatedBook.id}">${relatedBook.title}</a></h3>
                     ${relatedBook.series ? `<p class="book-series">📖 <a href="series.html?name=${encodeURIComponent(relatedBook.series)}">${relatedBook.series}</a></p>` : ''}
-                    <div class="download-label">⬇️ Скачать</div>
+                    <div class="download-label">️ Скачать</div>
                     <div class="book-formats">${formatsHTML}</div>
                 </div>
             `;
@@ -424,7 +446,7 @@ if (book) {
     container.innerHTML = `
         <div class="error-message">
             <h2>😕 Книга не найдена</h2>
-            <a href="библиотека.html" class="back-button">Вернуться в библиотеку</a>
+            <a href="index.html" class="back-button">Вернуться в библиотеку</a>
         </div>
     `;
 }
