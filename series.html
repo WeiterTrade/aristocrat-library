@@ -406,7 +406,7 @@ if (series) {
     const seriesBooks = BOOKS_DATA.filter(b => b.series === series.name);
     
     // Определяем тип (автор или издательство)
-    const isPublisher = series.author.includes('Издательство');
+    const isPublisher = PUBLISHERS_DATA.find(p => p.name === series.author) !== undefined;
     const linkText = isPublisher ? 'Издательство' : 'Автор';
     const displayName = getDisplayName(series.author);
     
