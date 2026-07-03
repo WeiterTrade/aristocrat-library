@@ -394,10 +394,11 @@ function getAuthorOrPublisherLink(name) {
     return `author.html?name=${encodeURIComponent(name)}`;
 }
 
-// Функция для получения отображаемого имени (без повтора "Издательство")
-function getDisplayName(name) {
-    if (name.startsWith('Издательство ')) {
-        return name.replace('Издательство ', '');
+// Функция для получения полного имени (Издательство АСТ вместо АСТ)
+function getFullDisplayName(name) {
+    const publisher = PUBLISHERS_DATA.find(p => p.name === name);
+    if (publisher && publisher.fullName) {
+        return publisher.fullName;
     }
     return name;
 }
@@ -408,14 +409,13 @@ if (series) {
     // Определяем тип (автор или издательство)
     const isPublisher = PUBLISHERS_DATA.find(p => p.name === series.author) !== undefined;
     const linkText = isPublisher ? 'Издательство' : 'Автор';
-    const displayName = getDisplayName(series.author);
     
     container.innerHTML = `
         <div class="series-header">
             <div class="series-cover-collage" id="coverCollage"></div>
             <h1 class="series-name-large">${series.name}</h1>
             <p class="series-author-name">
-                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${displayName}</a>
+                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${series.author}</a>
             </p>
             <div class="series-stats">
                 <div class="stat-item">
@@ -431,7 +431,7 @@ if (series) {
         
         ${series.description ? `
         <div class="series-description">
-            <h2> О серии</h2>
+            <h2>📜 О серии</h2>
             <p>${series.description}</p>
         </div>
         ` : ''}
