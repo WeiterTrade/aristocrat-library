@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Автор - Библиотека</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    
     <style>
         * { box-sizing: border-box; }
         
@@ -342,7 +350,6 @@ function getAuthorFromURL() {
     
     if (!authorName) return null;
     
-    // Декодируем URL
     try {
         authorName = decodeURIComponent(authorName);
     } catch (e) {
@@ -350,6 +357,11 @@ function getAuthorFromURL() {
     }
     
     return authorName.trim();
+}
+
+// Функция для поиска издательства
+function findPublisher(name) {
+    return PUBLISHERS_DATA.find(p => p.name === name || p.fullName === name);
 }
 
 const authorName = getAuthorFromURL();
