@@ -388,7 +388,7 @@ const PUBLISHERS_DATA = [
     {
         name: "АСТ",
         fullName: "Издательство АСТ",
-        logo: "https://github.com/WeiterTrade/aristocrat-library/blob/main/logo%20АСТ.png?raw=true",
+        logo: "https://archive.org/download/aristocrat-inc-books/Лого%20Издательств.zip/logo%20АСТ.png",
         description: `Издательство АСТ — одно из крупнейших издательств России, выпускающее художественную, учебную, научную и справочную литературу.
 
 АСТ издаёт книги в различных сериях, включая «Возвращение с Западного фронта» (произведения Эриха Марии Ремарка) и «Зарубежная Классика» (шедевры мировой литературы).
