@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Издательство - Библиотека</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    
     <style>
         * { box-sizing: border-box; }
         
@@ -56,6 +64,8 @@
             border: 4px solid #ffd700;
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
             margin-bottom: 20px;
+            background-color: #ffffff;
+            padding: 10px;
         }
 
         .publisher-name {
@@ -71,6 +81,7 @@
             max-width: 800px;
             margin: 20px auto;
             text-align: justify;
+            color: #ffffff;
         }
 
         .publisher-stats {
@@ -184,6 +195,7 @@
             font-size: 12px;
             color: #a0c4ff;
             margin: 0 0 8px 0;
+            font-style: italic;
         }
 
         .book-series a {
@@ -270,7 +282,7 @@
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const publisherName = decodeURIComponent(urlParams.get('name') || '');
-const publisher = PUBLISHERS_DATA.find(p => p.name === publisherName);
+const publisher = PUBLISHERS_DATA.find(p => p.name === publisherName || p.fullName === publisherName);
 
 const container = document.getElementById('publisherContainer');
 const booksGrid = document.getElementById('booksGrid');
@@ -283,7 +295,7 @@ if (publisher) {
     
     container.innerHTML = `
         <div class="publisher-header">
-            <img src="${publisher.logo}" alt="${publisher.name}" class="publisher-logo">
+            <img src="${publisher.logo}" alt="${publisher.fullName || publisher.name}" class="publisher-logo">
             <h1 class="publisher-name">${publisher.fullName || publisher.name}</h1>
             <p class="publisher-description">${publisher.description}</p>
             <div class="publisher-stats">
@@ -340,11 +352,11 @@ if (publisher) {
         });
     }
     
-    document.title = `${publisher.name} - Библиотека`;
+    document.title = `${publisher.fullName || publisher.name} - Библиотека`;
 } else {
     container.innerHTML = `
         <div class="error-message">
-            <h2>😕 Издательство не найдено</h2>
+            <h2> Издательство не найдено</h2>
             <a href="index.html" class="back-button">Вернуться в библиотеку</a>
         </div>
     `;
