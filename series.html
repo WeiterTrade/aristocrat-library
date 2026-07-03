@@ -379,11 +379,16 @@ const container = document.getElementById('seriesContainer');
 const booksGrid = document.getElementById('booksGrid');
 const booksTitle = document.getElementById('booksTitle');
 
+// Функция для поиска издательства по имени или полному имени
+function findPublisher(name) {
+    return PUBLISHERS_DATA.find(p => p.name === name || p.fullName === name);
+}
+
 // Функция для получения правильной ссылки (автор или издательство)
 function getAuthorOrPublisherLink(name) {
-    const publisher = PUBLISHERS_DATA.find(p => p.name === name);
+    const publisher = findPublisher(name);
     if (publisher) {
-        return `publisher.html?name=${encodeURIComponent(name)}`;
+        return `publisher.html?name=${encodeURIComponent(publisher.name)}`;
     }
     
     const author = AUTHORS_DATA.find(a => a.name === name);
@@ -394,9 +399,18 @@ function getAuthorOrPublisherLink(name) {
     return `author.html?name=${encodeURIComponent(name)}`;
 }
 
-// Функция для получения полного имени (Издательство АСТ вместо АСТ)
+// Функция для получения короткого имени (АСТ вместо Издательство АСТ)
+function getShortDisplayName(name) {
+    const publisher = findPublisher(name);
+    if (publisher) {
+        return publisher.name;
+    }
+    return name;
+}
+
+// Функция для получения полного имени (Издательство АСТ)
 function getFullDisplayName(name) {
-    const publisher = PUBLISHERS_DATA.find(p => p.name === name);
+    const publisher = findPublisher(name);
     if (publisher && publisher.fullName) {
         return publisher.fullName;
     }
@@ -407,15 +421,19 @@ if (series) {
     const seriesBooks = BOOKS_DATA.filter(b => b.series === series.name);
     
     // Определяем тип (автор или издательство)
-    const isPublisher = PUBLISHERS_DATA.find(p => p.name === series.author) !== undefined;
+    const publisher = findPublisher(series.author);
+    const isPublisher = publisher !== undefined;
     const linkText = isPublisher ? 'Издательство' : 'Автор';
+    
+    // Для отображения используем короткое имя (АСТ), т.к. слово "Издательство" уже есть перед двоеточием
+    const displayAuthor = isPublisher ? publisher.name : series.author;
     
     container.innerHTML = `
         <div class="series-header">
             <div class="series-cover-collage" id="coverCollage"></div>
             <h1 class="series-name-large">${series.name}</h1>
             <p class="series-author-name">
-                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${series.author}</a>
+                ${linkText}: <a href="${getAuthorOrPublisherLink(series.author)}">${displayAuthor}</a>
             </p>
             <div class="series-stats">
                 <div class="stat-item">
