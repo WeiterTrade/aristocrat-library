@@ -387,6 +387,7 @@ const AUTHORS_DATA = [
 const PUBLISHERS_DATA = [
     {
         name: "АСТ",
+        fullName: "Издательство АСТ",
         logo: "https://via.placeholder.com/200x200/003791/ffd700?text=AST",
         description: `Издательство АСТ — одно из крупнейших издательств России, выпускающее художественную, учебную, научную и справочную литературу.
 
