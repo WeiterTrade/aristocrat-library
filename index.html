@@ -718,7 +718,7 @@
 
     <div class="nav-tabs">
         <div class="nav-tab active" onclick="showSection('books', this)">📖 Книги</div>
-        <div class="nav-tab" onclick="showSection('authors', this)">✍️ Авторы</div>
+        <div class="nav-tab" onclick="showSection('authors', this)">️ Авторы</div>
         <div class="nav-tab" onclick="showSection('series', this)">📚 Серии</div>
     </div>
 
@@ -750,7 +750,7 @@
 
     <div id="authorsSection" class="hidden">
         <div class="authors-grid" id="authorsGrid"></div>
-        <div class="no-results hidden" id="noAuthorsResults">😕 Авторы не найдены</div>
+        <div class="no-results hidden" id="noAuthorsResults"> Авторы не найдены</div>
     </div>
 
     <div id="seriesSection" class="hidden">
@@ -767,6 +767,15 @@ let currentFilteredBooks = [];
 const booksData = BOOKS_DATA;
 const authorsData = AUTHORS_DATA;
 const seriesData = SERIES_DATA;
+
+// Функция для получения полного имени (Издательство АСТ вместо АСТ)
+function getFullDisplayName(name) {
+    const publisher = PUBLISHERS_DATA.find(p => p.name === name);
+    if (publisher && publisher.fullName) {
+        return publisher.fullName;
+    }
+    return name;
+}
 
 function showSection(section, tab) {
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -913,7 +922,7 @@ function renderAuthors(authors) {
         card.innerHTML = `
             <img src="${author.photo}" alt="${author.name}" class="author-photo">
             <h3 class="author-name">${author.name}</h3>
-            <p class="author-books-count">📚 Книг: ${booksCount}</p>
+            <p class="author-books-count"> Книг: ${booksCount}</p>
             <p style="color: #ffd700; font-size: 11px; margin-top: 8px;">▶ Перейти на страницу</p>
         `;
         grid.appendChild(card);
@@ -967,10 +976,13 @@ function renderSeries(series) {
             }
         }
         
+        // Используем getFullDisplayName для отображения "Издательство АСТ" вместо "АСТ"
+        const displayAuthor = getFullDisplayName(s.author);
+        
         card.innerHTML = `
             ${coversHTML}
             <h3 class="series-name">📖 ${s.name}</h3>
-            <p class="series-author">✍️ ${s.author}</p>
+            <p class="series-author">✍️ ${displayAuthor}</p>
             <p class="series-books-count">📚 Книг в серии: ${booksCount}</p>
             <p style="color: #ffd700; font-size: 11px; margin-top: 8px;">▶ Перейти на страницу</p>
         `;
