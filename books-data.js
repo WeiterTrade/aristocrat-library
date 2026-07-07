@@ -36,7 +36,7 @@ const BOOKS_DATA = [
 
 Это пронзительная история о том, как война продолжает убивать своих участников даже после её окончания.`,
         cover: "https://archive.org/download/cover1__w410/ad7ff1c84486d4ce.jpg",
-        formats: { epub: "#", pdf: "#", audio: "#" }
+        formats: { epub: "https://archive.org/download/aristocrat-inc-books/Эрих%20Мария%20Ремарк%20-%20На%20Западном%20Фронте%20Без%20Перемен.epub", pdf: "#", audio: "#" }
     },
     {
         id: 3,
